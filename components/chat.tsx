@@ -1,12 +1,14 @@
 "use client";
 
-import { PreviewMessage, ThinkingMessage } from "@/components/message";
+import React, { Suspense, lazy } from "react";
 import { MultimodalInput } from "@/components/multimodal-input";
 import { Overview } from "@/components/overview";
 import { useScrollToBottom } from "@/hooks/use-scroll-to-bottom";
-import { ToolInvocation } from "ai";
 import { useChat } from "ai/react";
 import { toast } from "sonner";
+
+const PreviewMessage = lazy(() => import("@/components/message").then(module => ({ default: module.PreviewMessage })));
+const ThinkingMessage = lazy(() => import("@/components/message").then(module => ({ default: module.ThinkingMessage })));
 
 export function Chat() {
   const chatId = "001";
@@ -42,18 +44,20 @@ export function Chat() {
       >
         {messages.length === 0 && <Overview />}
 
-        {messages.map((message, index) => (
-          <PreviewMessage
-            key={message.id}
-            chatId={chatId}
-            message={message}
-            isLoading={isLoading && messages.length - 1 === index}
-          />
-        ))}
+        <Suspense fallback={<div>Loading...</div>}>
+          {messages.map((message, index) => (
+            <PreviewMessage
+              key={message.id}
+              chatId={chatId}
+              message={message}
+              isLoading={isLoading && messages.length - 1 === index}
+            />
+          ))}
 
-        {isLoading &&
-          messages.length > 0 &&
-          messages[messages.length - 1].role === "user" && <ThinkingMessage />}
+          {isLoading &&
+            messages.length > 0 &&
+            messages[messages.length - 1].role === "user" && <ThinkingMessage />}
+        </Suspense>
 
         <div
           ref={messagesEndRef}

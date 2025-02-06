@@ -84,7 +84,6 @@ def convert_to_openai_messages(messages: List[ClientMessage]) -> List[ChatComple
 
     return openai_messages
 
-
 def convert_to_ollama_messages(messages: List[ClientMessage]) -> List[ChatCompletionMessageParam]:
     ollama_messages = []
 
@@ -128,18 +127,18 @@ def convert_to_ollama_messages(messages: List[ClientMessage]) -> List[ChatComple
 
         ollama_messages.append({
             "role": message.role,
-            "content": parts,
-            **tool_calls_dict,
+            "content": message.content,
+            # **tool_calls_dict,
         })
 
-        if(message.toolInvocations):
-            for toolInvocation in message.toolInvocations:
-                tool_message = {
-                    "role": "tool",
-                    "tool_call_id": toolInvocation.toolCallId,
-                    "content": json.dumps(toolInvocation.result),
-                }
+        # if(message.toolInvocations):
+        #     for toolInvocation in message.toolInvocations:
+        #         tool_message = {
+        #             "role": "tool",
+        #             "tool_call_id": toolInvocation.toolCallId,
+        #             "content": json.dumps(toolInvocation.result),
+        #         }
 
-                ollama_messages.append(tool_message)
+        #         ollama_messages.append(tool_message)
 
     return ollama_messages
