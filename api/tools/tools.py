@@ -1,9 +1,5 @@
 import requests
 
-def get_temp(temp):
-    print("temp: " + temp)
-    return temp
-
 def get_current_weather(latitude, longitude):
     print("Fetching weather data..." + str(latitude) + " " + str(longitude))
     # Format the URL with proper parameter substitution
